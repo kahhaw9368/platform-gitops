@@ -1,0 +1,3 @@
+# Prod promotion always human-gated (ADR-0007)
+teams/**/*.prod.yaml @kahhaw9368
+platform/**          @kahhaw9368
