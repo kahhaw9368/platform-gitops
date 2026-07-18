@@ -1,0 +1,15 @@
+# WebService instance — the ~15-line artifact APEX PRs (ADR-0003/0004).
+# Expands via the webservice ResourceGraphDefinition (../rgd-web-service.yaml):
+# Deployment + Service + LogGroup + baseline alarm — observability included (ADR-0006).
+apiVersion: platform.starterkit.aws/v1alpha1
+kind: WebService
+metadata:
+  name: cms-api
+  namespace: team-cms-team
+spec:
+  serviceName: cms-api
+  teamName: cms-team
+  image: 008971650536.dkr.ecr.us-east-1.amazonaws.com/cms-team/cms-api:bootstrap
+  port: 8080
+  replicas: 2
+  size: small
