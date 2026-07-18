@@ -1,0 +1,14 @@
+# Team instance — the artifact APEX PRs to onboard a Dev Team (ADR-0008).
+# Expands via the team ResourceGraphDefinition (../rgd-team.yaml).
+apiVersion: platform.starterkit.aws/v1alpha1
+kind: Team
+metadata:
+  name: cms-team
+  # Team instances live in the platform's own namespace; the RGD creates team-cms-team.
+  namespace: platform-system
+spec:
+  teamName: cms-team
+  idcGroup: cms-team
+  cpuQuota: "8"
+  memoryQuota: 16Gi
+  podQuota: 50
