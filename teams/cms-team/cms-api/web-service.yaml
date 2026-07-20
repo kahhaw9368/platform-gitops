@@ -9,7 +9,7 @@ metadata:
 spec:
   serviceName: cms-api
   teamName: cms-team
-  image: 008971650536.dkr.ecr.us-east-1.amazonaws.com/cms-team/cms-api:bootstrap
+  image: 008971650536.dkr.ecr.us-east-1.amazonaws.com/cms-team:cms-api-0158ee513b5b
   port: 8080
   replicas: 2
   size: small
