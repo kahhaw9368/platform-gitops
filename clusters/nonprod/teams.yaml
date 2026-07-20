@@ -1,0 +1,37 @@
+# Team + WebService instances synced to platform-nonprod. Wave 1: runs after the RGDs
+# (wave 0) so the Team/WebService custom types exist. The nonprod state is the plain
+# web-service.yaml; *.prod.yaml is excluded (prod is promotion-gated, ADR-0007).
+# Retry absorbs the ordering race: a Team must create its team-<name> namespace before
+# that team's WebService can reconcile into it.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: teams-nonprod
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: default
+  source:
+    repoURL: https://codeconnections.us-east-1.amazonaws.com/git-http/008971650536/us-east-1/be59e809-a1aa-4c27-9c0b-4396df79150e/kahhaw9368/platform-gitops.git
+    targetRevision: main
+    path: teams
+    directory:
+      recurse: true
+      exclude: "**/*.prod.yaml"
+  destination:
+    server: arn:aws:eks:us-east-1:008971650536:cluster/platform-nonprod
+    namespace: platform-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+    retry:
+      limit: 10
+      backoff:
+        duration: 15s
+        factor: 2
+        maxDuration: 5m

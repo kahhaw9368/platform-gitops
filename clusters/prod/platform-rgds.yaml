@@ -1,0 +1,26 @@
+# RGDs (Team, WebService types) synced to platform-prod. Wave 0: same as nonprod —
+# the custom types must exist on prod before any prod WebService instance reconciles.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-rgds-prod
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  project: default
+  source:
+    repoURL: https://codeconnections.us-east-1.amazonaws.com/git-http/008971650536/us-east-1/be59e809-a1aa-4c27-9c0b-4396df79150e/kahhaw9368/platform-gitops.git
+    targetRevision: main
+    path: platform
+    directory:
+      recurse: true
+  destination:
+    server: arn:aws:eks:us-east-1:008971650536:cluster/platform-prod
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true

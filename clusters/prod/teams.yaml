@@ -1,0 +1,36 @@
+# Team + WebService instances synced to platform-prod. Wave 1: after the RGDs (wave 0).
+# Prod includes the Team instances (team.yaml — tenancy is the same both envs) plus ONLY
+# the promotion-gated *.prod.yaml WebService state; the nonprod web-service.yaml is
+# excluded so a nonprod tag-bump never touches prod (ADR-0007).
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: teams-prod
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: default
+  source:
+    repoURL: https://codeconnections.us-east-1.amazonaws.com/git-http/008971650536/us-east-1/be59e809-a1aa-4c27-9c0b-4396df79150e/kahhaw9368/platform-gitops.git
+    targetRevision: main
+    path: teams
+    directory:
+      recurse: true
+      include: "{**/team.yaml,**/*.prod.yaml}"
+  destination:
+    server: arn:aws:eks:us-east-1:008971650536:cluster/platform-prod
+    namespace: platform-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+    retry:
+      limit: 10
+      backoff:
+        duration: 15s
+        factor: 2
+        maxDuration: 5m
